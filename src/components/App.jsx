@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, removeContact, setFilter } from 'redux/contacts/contactsSlise';
+import { addContact, removeContact, setFilter } from '../redux/contacts/contactsSlise';
 import { ContactForm } from 'components/contactForm/ContactForm';
 import { Filter } from 'components/filter/Filter';
 import { ContactList } from 'components/contactList/ContactList';
@@ -15,23 +15,6 @@ export const App = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  useEffect(() => {
-    const loadContactsFromLocalStorage = () => {
-      const storedContacts = JSON.parse(localStorage.getItem('contacts')) || [];
-      dispatch(addContact(storedContacts));
-    };
-
-    loadContactsFromLocalStorage();
-  }, [dispatch]);
-
-  useEffect(() => {
-    const saveContactsToLocalStorage = () => {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    };
-
-    saveContactsToLocalStorage();
-  }, [contacts]);
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,10 +27,10 @@ export const App = () => {
     }
 
     const newContact = { id: nanoid(), name, number };
-    setName('');
-    setNumber('');
     const action = addContact(newContact);
     dispatch(action);
+    setName('');
+    setNumber('');
   };
 
   const handleChange = (e) => {
@@ -67,7 +50,7 @@ export const App = () => {
   };
 
   const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
+  contact.name && contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
