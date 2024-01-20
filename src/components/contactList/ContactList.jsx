@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeContact, setFilter } from '../../redux/contacts/contactsSlise';
+import { removeContact } from '../../redux/contacts/contactsSlise';
 import css from './ContactList.module.css';
 
   const ContactList = () => {
@@ -12,12 +12,6 @@ import css from './ContactList.module.css';
     const action = removeContact(id);
     dispatch(action);
   };
-   const handleFilterChange = (e) => {
-    const { value } = e.target;
-    const action = setFilter(value);
-    dispatch(action);
-  };
-
 
   const filteredContacts = contacts.filter((contact) =>
   contact.name && contact.name.toLowerCase().includes(filter.toLowerCase())
@@ -25,8 +19,7 @@ import css from './ContactList.module.css';
 
 return (
     <div>
-      <input type="text" value={filter} onChange={handleFilterChange} placeholder="Filter contacts" />
-      <ul>
+       <ul>
         {filteredContacts.map((contact) => (
           <li key={contact.id}>
             {contact.name}: {contact.number}

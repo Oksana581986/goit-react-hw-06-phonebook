@@ -1,13 +1,16 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
 import { addContact } from '../../redux/contacts/contactsSlise';
+import { useDispatch, useSelector } from 'react-redux';
 import css from './ContactForm.module.css';
 import { useState } from 'react';
 
 
-const ContactForm = ({ initialName, initialNumber, contacts, dispatch }) => {
-  const [name, setName] = useState(initialName || ''); 
-  const [number, setNumber] = useState(initialNumber || ''); 
+const ContactForm = () => {
+  const contacts = useSelector((store) => store.contacts.contacts);
+  const dispatch = useDispatch();
+  const [name, setName] = useState(''); 
+  const [number, setNumber] = useState(''); 
 
   const handleSubmit = (e) => {
     e.preventDefault();
