@@ -1,21 +1,53 @@
 import React from 'react';
+import { nanoid } from 'nanoid';
+import { addContact } from '../../redux/contacts/contactsSlise';
 import css from './ContactForm.module.css';
+import { useState } from 'react';
 
 
-const ContactForm = ({ onSubmit, name, number, onChange }) => (
-    <form  className={css.formcontact} onSubmit={onSubmit}>
+const ContactForm = ({ initialName, initialNumber, contacts, dispatch }) => {
+  const [name, setName] = useState(initialName || ''); 
+  const [number, setNumber] = useState(initialNumber || ''); 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const lowerCaseName = name.toLowerCase();
+
+    if (contacts.some((contact) => contact.name.toLowerCase() === lowerCaseName)) {
+      alert(`${name} is already in contacts.`);
+      return;
+    }
+
+    const newContact = { id: nanoid(), name, number };
+    const action = addContact(newContact);
+    dispatch(action);
+    setName('');
+    setNumber('');
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    name === 'name' ? setName(value) : setNumber(value);
+  };
+
+  return (
+    <form className={css.formcontact} onSubmit={handleSubmit}>
       <label className={css.labelname}>
         Name:
-        <input className={css.inputname} type="text" name="name" value={name} onChange={onChange} required />
+        <input className={css.inputname} type="text" name="name" value={name} onChange={handleChange} required />
       </label>
       <br />
       <label className={css.labelnumber}>
         Number:
-        <input className={css.inputnumber}   type="tel" name="number" value={number} onChange={onChange} required />
+        <input className={css.inputnumber} type="tel" name="number" value={number} onChange={handleChange} required />
       </label>
       <br />
-      <button  className={css.addcontact} type="submit">Add contact</button>
+      <button className={css.addcontact} type="submit">
+        Add contact
+      </button>
     </form>
   );
+};
 
   export { ContactForm };

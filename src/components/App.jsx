@@ -1,66 +1,18 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContact, removeContact, setFilter } from '../redux/contacts/contactsSlise';
 import { ContactForm } from 'components/contactForm/ContactForm';
-import { Filter } from 'components/filter/Filter';
 import { ContactList } from 'components/contactList/ContactList';
+import { Filter } from 'components/filter/Filter';
+
 
 
 export const App = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector((store) => store.contacts.contacts);
-  const filter = useSelector((store) => store.contacts.filter);
-
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const lowerCaseName = name.toLowerCase();
-
-    if (contacts.some((contact) => contact.name.toLowerCase() === lowerCaseName)) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
-
-    const newContact = { id: nanoid(), name, number };
-    const action = addContact(newContact);
-    dispatch(action);
-    setName('');
-    setNumber('');
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    name === 'name' ? setName(value) : setNumber(value);
-  };
-
-  const handleFilterChange = (e) => {
-    const { value } = e.target;
-    const action = setFilter(value);
-    dispatch(action);
-  };
-
-  const handleDeleteContact = (id) => {
-    const action = removeContact(id);
-    dispatch(action);
-  };
-
-  const filteredContacts = contacts.filter((contact) =>
-  contact.name && contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  return (
+   return (
     <div>
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={handleSubmit} name={name} number={number} onChange={handleChange} />
+      <ContactForm />
 
       <h2>Contacts</h2>
-      <Filter value={filter} onChange={handleFilterChange} />
-      <ContactList contacts={filteredContacts} onDeleteContact={handleDeleteContact} />
+      <Filter />
+      <ContactList />
     </div>
   );
 };
